@@ -1,13 +1,11 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - master
 
+# Yahan pool ko apne self-hosted agent ke liye change karna hai
 pool:
-  vmImage: 'ubuntu-latest'
+  name: MyLocalAgents
+  demands:
+  - agent.name -equals rahulagent1
 
 # Pipelines > Stages > Jobs > Tasks(Steps)
 
@@ -21,20 +19,23 @@ jobs:
       echo See https://aka.ms/yaml
       echo more information
     displayName: 'Run a multi-line script'
+
 - job: Job2
   dependsOn: Job1
   steps:
   - script: echo Job2!
     displayName: 'Run a one-line script'
+
 - job: Job3
   dependsOn: Job1
   steps:
   - script: echo Job3!
     displayName: 'Run a one-line script'
+
 - job: Job4
   dependsOn: 
   - Job2
   - Job3
   steps:
-  - script: echo Job3!
+  - script: echo Job4!
     displayName: 'Run a one-line script'
