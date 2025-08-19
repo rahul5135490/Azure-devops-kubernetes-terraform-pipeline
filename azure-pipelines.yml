@@ -1,0 +1,44 @@
+trigger:
+- main
+
+pool:
+  name: MyLocalAgents   # apne self-hosted agent pool ka naam
+
+jobs:
+- job: Job1
+  steps:
+  - checkout: self
+  - script: echo "Job1 - Repo checkout done"
+    displayName: 'Checkout Source Code'
+
+- job: Job2
+  dependsOn: Job1
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+  - script: |
+      python --version
+      echo "print('Hello from Python script in Job2')" > test.py
+      python test.py
+    displayName: 'Run Python Script'
+
+- job: Job3
+  dependsOn: Job1
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '18.x'
+  - script: |
+      node --version
+      echo "console.log('Hello from Node.js script in Job3')" > app.js
+      node app.js
+    displayName: 'Run Node.js Script'
+
+- job: Job4
+  dependsOn: 
+  - Job2
+  - Job3
+  steps:
+  - script: echo " Job4 - Both Python and Node.js jobs completed successfully!"
+    displayName: 'Final Aggregation Job'
